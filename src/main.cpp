@@ -10,7 +10,9 @@
 #include "ota.h"
 #include <WiFi.h>
 // #include "soc/rtc_wdt.h" //设置rtc看门狗用
-
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+// #include "esp32-hal-cpu.h"
 #define BUTTON_PIN_BITMASK 0x0010 // GPIOs 4    io4 按钮
 
 BleKeyboard bleKeyboard("AC225", "OCRC", 50); // 蓝牙
@@ -24,16 +26,17 @@ void Task_OTA(void *pvParameters);    // OTA更新 子线程
 void Task_AC_OFF(void *pvParameters); // 关闭所有输出口 子线程
 void Task_RTC(void *pvParameters);    // 看门狗
 
-// void app2(void *pvParameters);     // cpu1函数2  按键
-// void doubleclick();                // 双击
-// void time1_callback() // 定时函数   熄灭屏幕   进入深度睡眠
-// {
-//     esp_deep_sleep_start();
-// }
-
 void setup()
 {
     Serial.begin(115200);
+
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); // disable brownout detector
+    // WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_RESET_REG, 0); // disable brownout detector reset
+
+    // setCpuFrequencyMhz(80);
+    Serial.println("-------------------------------MHz");
+    Serial.println(getCpuFrequencyMhz());
+
     pinMode(4, INPUT_PULLUP);
     pinMode(27, INPUT_PULLUP);
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_27, 0);                              // 唤醒引脚配置 低电平唤醒
@@ -79,18 +82,14 @@ void setup()
                                 NULL,       //
                                 0           // 核心  0/1  不指定
         );
-        updateBin();   // OTA  含联网
+        updateBin(); // OTA  含联网
         vTaskDelay(1000);
-        esp_restart(); // 重启
+        esp_restart(); // 重启 （失败情况，防止乱跳）
     }
 
     // CK22AT  2314
     if (keros_main() != 1)
         esp_deep_sleep_start();
-
-    // button.reset(); // 清除按钮状态机的状态
-    // button.attachDoubleClick(doubleclick);   // 注册双击
-    // delay(600);                              // 600
 
     // 看门狗
     xTaskCreatePinnedToCore(Task_RTC,   // 具体实现的函数
@@ -103,14 +102,8 @@ void setup()
     );
 
     // sw6208开机配置
-    SW6208init(); // 1.按键作用      2.轻载时间设置为8s     3.小电流使能    4.NTC门限改为 60℃    5.打开12V输入
+    SW6208init(); // 1.按键作用取消      2.轻载时间设置为8s     3.小电流使能    4.NTC门限改为 60℃    5.打开12V输入
     Serial.println("ESP32_setup_OK");
-
-    // rtc_wdt_protect_off(); // 看门狗写保护关闭 关闭后可以喂狗
-    // // rtc_wdt_protect_on();    //看门狗写保护打开 打开后不能喂狗
-    // // rtc_wdt_disable();       //禁用看门狗
-    // rtc_wdt_enable();               // 启用看门狗
-    // rtc_wdt_set_time(RTC_WDT_STAGE0, 8000); // 设置看门狗超时 8000ms.则reset重启
 }
 
 void loop()
@@ -193,7 +186,7 @@ void loop()
             }
             else
             beijing2:
-                BackgroundTime2(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
+                BackgroundTime2(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
             break;
         case 3:
             if (yan == 1)
@@ -237,7 +230,7 @@ void loop()
             else
             {
             beijing4:
-                BackgroundTime4(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
+                BackgroundTime4(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
             }
             break;
         case 5:
@@ -281,7 +274,7 @@ void loop()
             else
             {
             beijing6:
-                BackgroundTime6(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
+                BackgroundTime6(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
             }
             break;
         case 7:
@@ -303,7 +296,7 @@ void loop()
             else
             {
             beijing7:
-                BackgroundTime7(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
+                BackgroundTime7(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
             }
             break;
         default:
@@ -361,26 +354,25 @@ void loop()
                                 lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
                                 break;
                             case 2:
-                                BackgroundTime2(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
+                                BackgroundTime2(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
                                 break;
                             case 3:
                                 BackgroundTime3(week, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_m, cycle, bat_per, bt_icon);
                                 BackgroundTime3_2(month, day, bat_ntc, ic_temp, hour, minute, sec, smalla, cycle);
                                 break;
                             case 4:
-                                BackgroundTime4(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
+                                BackgroundTime4(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
                                 break;
                             case 5:
                                 BackgroundTime5(smalla, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_per, bat_m, bt_icon, ic_temp, bat_ntc, sinkProtocol, sourceProtocol, month, day, hour, minute, sec, week);
                                 break;
                             case 6:
-                                BackgroundTime6(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
+                                BackgroundTime6(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
                                 break;
                             case 7:
-                                BackgroundTime7(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
+                                BackgroundTime7(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
                                 break;
                             default:
-                                lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
                                 break;
                             }
                             // AC_OFF();
@@ -422,23 +414,23 @@ void loop()
                                     lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
                                     break;
                                 case 2:
-                                    BackgroundTime2(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
+                                    BackgroundTime2(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
                                     break;
                                 case 3:
                                     BackgroundTime3(week, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_m, cycle, bat_per, bt_icon);
                                     BackgroundTime3_2(month, day, bat_ntc, ic_temp, hour, minute, sec, smalla, cycle);
                                     break;
                                 case 4:
-                                    BackgroundTime4(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
+                                    BackgroundTime4(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
                                     break;
                                 case 5:
                                     BackgroundTime5(smalla, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_per, bat_m, bt_icon, ic_temp, bat_ntc, sinkProtocol, sourceProtocol, month, day, hour, minute, sec, week);
                                     break;
                                 case 6:
-                                    BackgroundTime6(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
+                                    BackgroundTime6(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
                                     break;
                                 case 7:
-                                    BackgroundTime7(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
+                                    BackgroundTime7(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
                                     break;
                                 default:
                                     lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
@@ -515,7 +507,7 @@ void loop()
 
                                     // 开始写入数据
                                     EEPROM.write(12, idlock);                                   // 写1 关闭所有输出口(丢失模式)
-                                    initRTCtime(year, month, day, hour, minute, sec + 2, week); // 更新彩屏时间
+                                    initRTCtime(year, month, day, hour, minute, sec + 1, week); // 更新彩屏时间
                                     EEPROM.write(5, sleeptime);                                 // 写入屏幕睡眠倒计时
                                     EEPROM.write(8, smalla);                                    // 写入小电流设置
                                     EEPROM.write(11, ota);                                      // OTA更新  写1更新自动置零
@@ -615,7 +607,6 @@ void loop()
         }
     }
 }
-
 // OTA
 void Task_OTA(void *pvParameters)
 {

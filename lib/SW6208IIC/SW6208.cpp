@@ -143,7 +143,8 @@ float SYS_inA()
     float a_value;
     a_value = batteryADC() * 0.002273;
     Serial.println(a_value, 4);
-    return a_value * 1.1;
+    // return a_value * 1.1;
+    return a_value;
 }
 
 /**
@@ -164,7 +165,8 @@ float SYS_outA()
     float a_value;
     a_value = batteryADC() * 0.002273;
     Serial.println(a_value, 4);
-    return a_value * 1.1;
+    // return a_value * 1.1;
+    return a_value;
 }
 
 /**
@@ -277,9 +279,9 @@ uint8_t xdlzt()
  */
 void kqxdl()
 {
-    I2C_Write(SW6208_address, 0x19, 0X4);// A2口触发插入事件
+    I2C_Write(SW6208_address, 0x19, 0X4);  // A2口触发插入事件
     I2C_Write(SW6208_address, 0x2E, 0X10); // 写1开启或退出小电流
-    I2C_Write(SW6208_address, 0x19, 0X8);// A2口触发拔出事件
+    I2C_Write(SW6208_address, 0x19, 0X8);  // A2口触发拔出事件
 }
 
 // 关闭所有输出口
@@ -316,20 +318,20 @@ void AC_OFF()
  */
 void SW6208init()
 {
-    if (I2C_Read(SW6208_address, 0x03) != 0xF || I2C_Read(SW6208_address, 0x30) != 0x54 || I2C_Read(SW6208_address, 0x33) != 0x3)
+    if (I2C_Read(SW6208_address, 0x03) != 0xBF || I2C_Read(SW6208_address, 0x30) != 0x54 || I2C_Read(SW6208_address, 0x33) != 0x3)
     {
-        I2C_Write(SW6208_address, 0x03, 0xF); // 0000 1111  // 3: 仅显示电量
+        I2C_Write(SW6208_address, 0x03, 0xBF); // 0000 1111  // 3: 仅显示电量
         I2C_Write(SW6208_address, 0x30, 0x54); // 0100  // 轻载检测电流设置 VOUT<7.65V 或者 VOUT>7.65V 且 reg0x30[0]=0:   此设置为:25mA    轻载时间设置为8s
-        I2C_Write(SW6208_address, 0x33, 0x3);  // 0011  // 小电流使能
+        I2C_Write(SW6208_address, 0x33, 0x3);  // 0011  // MCU 蓝牙小电流使能
     }
-
+    delay(200);
     if (I2C_Read(SW6208_address, 0x47) != 0X0 || I2C_Read(SW6208_address, 0x48) != 0XE0)
     {
         I2C_Write(SW6208_address, 0x47, 0X0);  // Boost NTC温度自适应功能使能   使能    高于自适应温度门限后，ntc温度每上升1度，vout下降800mv   (温度达不到，自适应阈值100°)基本没用
         I2C_Write(SW6208_address, 0x48, 0XE0); // Charger NTC高温保护门限 60°       0xC0  55°    默认50°
     }
-
-    // if (I2C_Read(SW6208_address, 0x1A) != 0X18) 
+    // delay(200);
+    // if (I2C_Read(SW6208_address, 0x1A) != 0X18)
     // {
     //     I2C_Write(SW6208_address, 0x1A, 0X18); // 打开12V输入
     // }
