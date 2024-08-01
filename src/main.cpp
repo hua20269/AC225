@@ -9,10 +9,8 @@
 #include <OneButton.h>
 #include "ota.h"
 #include <WiFi.h>
-// #include "soc/rtc_wdt.h" //设置rtc看门狗用
-#include "soc/soc.h"
-#include "soc/rtc_cntl_reg.h"
-// #include "esp32-hal-cpu.h"
+// #include "soc/rtc_wdt.h" // 设置rtc看门狗用
+
 #define BUTTON_PIN_BITMASK 0x0010 // GPIOs 4    io4 按钮
 
 BleKeyboard bleKeyboard("AC225", "OCRC", 50); // 蓝牙
@@ -29,13 +27,6 @@ void Task_RTC(void *pvParameters);    // 看门狗
 void setup()
 {
     Serial.begin(115200);
-
-    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); // disable brownout detector
-    // WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_RESET_REG, 0); // disable brownout detector reset
-
-    // setCpuFrequencyMhz(80);
-    Serial.println("-------------------------------MHz");
-    Serial.println(getCpuFrequencyMhz());
 
     pinMode(4, INPUT_PULLUP);
     pinMode(27, INPUT_PULLUP);
@@ -108,8 +99,6 @@ void setup()
 
 void loop()
 {
-    // vTaskDelay(20);
-    // rtc_wdt_feed(); // 喂狗函数
     delay(200);
     float battery_V, sys_outinv, ic_temp, ntc_v, sys_a, sys_w, bat_m, bat_ntc;                    // 变量电池电压   系统输入输出电压   ic温度   ntc电压   输入/输出电流   系统功率   电池容量   电池温度
     uint16_t year, time, pass;                                                                    // 年份   读蓝牙链接时间    四位密码
@@ -333,10 +322,10 @@ void loop()
         {
             if (digitalRead(4) == 0)
             {
-                delay(150);              // 消抖
+                delay(200);              // 消抖
                 if (digitalRead(4) == 0) // 此处进入眼睛动画
                 {
-                    delay(300);                // 延时
+                    delay(200);                // 延时
                     if (digitalRead(4) == LOW) // 拉低准备进入蓝牙
                     {
                         delay(1000);               // 延时
@@ -373,6 +362,7 @@ void loop()
                                 BackgroundTime7(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
                                 break;
                             default:
+                                lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
                                 break;
                             }
                             // AC_OFF();
@@ -438,7 +428,7 @@ void loop()
                                 }
                                 jsonBuffer1["chipid"] = ESP.getEfuseMac() & 0X0000FFFFFFFFFFFF;
                                 jsonBuffer1["name"] = "AC225";                     // 设备名称
-                                jsonBuffer1["software"] = "v4.0";                  // 固件版本
+                                jsonBuffer1["software"] = "v4.1";                  // 固件版本
                                 jsonBuffer1["hardware"] = "v3.0";                  // 硬件版本
                                 jsonBuffer1["bat_cir"] = cycle;                    // 循环次数
                                 jsonBuffer1["bat_V"] = String(battery_V, 3);       // 电池电压
@@ -479,7 +469,6 @@ void loop()
                                 {
                                     Serial.println("-------------------------------Rxdata:-----------");
                                     Serial.println(Rxdata);
-                                    // Rxdata = "{\"str\":\"welcome\",\"data1\":135,\"data2\":[48.756080,2.302038],\"object\":{\"key1\":-254}}";
                                     DeserializationError error = deserializeJson(jsonBuffer2, Rxdata);
                                     if (error)
                                     {
@@ -510,7 +499,7 @@ void loop()
                                     initRTCtime(year, month, day, hour, minute, sec + 1, week); // 更新彩屏时间
                                     EEPROM.write(5, sleeptime);                                 // 写入屏幕睡眠倒计时
                                     EEPROM.write(8, smalla);                                    // 写入小电流设置
-                                    EEPROM.write(11, ota);                                      // OTA更新  写1更新自动置零
+                                    EEPROM.write(11, ota);                                      // OTA更新  写1更新  更新处自动置零
                                     if (espthem != 0)
                                         EEPROM.write(4, espthem); // 写入主题编号
                                     if (topic != 0)
@@ -576,7 +565,7 @@ void loop()
                         }
                     }
                     yan ^= 1;
-                    delay(100);
+                    vTaskDelay(100);
                     goto beijing0;
                 }
             }
