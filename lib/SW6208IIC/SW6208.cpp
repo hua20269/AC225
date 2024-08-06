@@ -26,18 +26,10 @@ uint16_t batteryADC()
  */
 float batteryV()
 {
-    if (I2C_Write(SW6208_address, 0x12, 0x0) == 0)
-    {
-        // Serial.println("V-ok!");
-    }
-    else
-    {
-        Serial.print("V-NO!");
-    }
-    float v_value;
-    v_value = batteryADC() * 0.0012;
-    Serial.println(v_value);
-    return v_value;
+    I2C_Write(SW6208_address, 0x12, 0x0);
+    Serial.print("batteryV: ");
+    Serial.println(batteryADC() * 0.0012);
+    return batteryADC() * 0.0012;
 }
 
 /**
@@ -47,18 +39,10 @@ float batteryV()
  */
 float battery_outinV()
 {
-    if (I2C_Write(SW6208_address, 0x12, 0x1) == 0)
-    {
-        // Serial.print("wok!");
-    }
-    else
-    {
-        Serial.print("wNO!");
-    }
-    float a_value;
-    a_value = batteryADC() * 0.004;
-    Serial.println(a_value, 4);
-    return a_value;
+    I2C_Write(SW6208_address, 0x12, 0x1);
+    Serial.print("SYS_V: ");
+    Serial.println(batteryADC() * 0.004);
+    return batteryADC() * 0.004;
 }
 
 /**
@@ -68,18 +52,10 @@ float battery_outinV()
  */
 float battery_ictemp()
 {
-    if (I2C_Write(SW6208_address, 0x12, 0x2) == 0)
-    {
-        // Serial.print("wok!");
-    }
-    else
-    {
-        Serial.print("wNO!");
-    }
-    float a_value;
-    a_value = (batteryADC() - 1839) / 6.82;
-    Serial.println(a_value, 4);
-    return a_value;
+    I2C_Write(SW6208_address, 0x12, 0x2);
+    Serial.print("ictemp: ");
+    Serial.println((batteryADC() - 1839) / 6.82);
+    return (batteryADC() - 1839) / 6.82;
 }
 
 /**
@@ -91,35 +67,22 @@ float battery_ntcV()
 {
     uint8_t r_buffer;
     float temp;
-    float N1, N2, N3, N4;
     r_buffer = I2C_Read(SW6208_address, 0x48);
-    Serial.println("ADC: ");
-    Serial.println(r_buffer, HEX);
     r_buffer = r_buffer & 0x1;
-    Serial.println(r_buffer);
-    if (I2C_Write(SW6208_address, 0x12, 0x3) == 0)
-    {
-        // Serial.print("wok!");
-    }
-    else
-    {
-        Serial.print("wNO!");
-    }
+    I2C_Write(SW6208_address, 0x12, 0x3);
+
     if (r_buffer == 0)
-    {
         temp = batteryADC() * 0.0022 / 0.00008;
-    }
     if (r_buffer == 1)
-    {
         temp = batteryADC() * 0.0011 / 0.00004;
-    }
-    Serial.println(temp, 4);
+
     temp = log(temp / R25); // ln(Rt/Rp)：Rt:当前温度下的阻值 R25:25℃下的NTC阻值(K)
     temp /= BX;             // ln(Rt/Rp)/BX 注：BX值一般为NTC的规格，本次用的NTC型号是3950
     temp += (1 / T25);
     temp = 1 / temp;
     temp -= 273.15;
     temp += 0.5;
+    Serial.print("NTC: ");
     Serial.println(temp, 4);
     return temp;
 }
@@ -132,19 +95,15 @@ float battery_ntcV()
 
 float SYS_inA()
 {
-    if (I2C_Write(SW6208_address, 0x12, 0x4) == 0)
-    {
-        // Serial.print("wok!");
-    }
-    else
-    {
-        Serial.print("wNO!");
-    }
+    I2C_Write(SW6208_address, 0x12, 0x4);
+
     float a_value;
     a_value = batteryADC() * 0.002273;
-    Serial.println(a_value, 4);
-    // return a_value * 1.1;
+
+    Serial.print("SYS_inA: ");
+    Serial.println(a_value);
     return a_value;
+    // return a_value * 1.1;
 }
 
 /**
@@ -154,19 +113,15 @@ float SYS_inA()
  */
 float SYS_outA()
 {
-    if (I2C_Write(SW6208_address, 0x12, 0x5) == 0)
-    {
-        // Serial.print("wok!");
-    }
-    else
-    {
-        Serial.print("wNO!");
-    }
+    I2C_Write(SW6208_address, 0x12, 0x5);
+
     float a_value;
     a_value = batteryADC() * 0.002273;
-    Serial.println(a_value, 4);
-    // return a_value * 1.1;
+
+    Serial.print("SYS_outA: ");
+    Serial.println(a_value);
     return a_value;
+    // return a_value * 1.1;
 }
 
 /**
@@ -198,14 +153,10 @@ float battery_volume()
  */
 uint16_t battery_per()
 {
-    uint8_t r_buffer;
-    uint16_t a_value;
-    r_buffer = I2C_Read(SW6208_address, 0x7E);
-    Serial.println("ADC");
-    Serial.println(r_buffer, HEX);
-    a_value = r_buffer;
-    Serial.println(a_value);
-    return a_value;
+    Serial.print("battery_per: ");
+    Serial.println(I2C_Read(SW6208_address, 0x7E));
+    
+    return I2C_Read(SW6208_address, 0x7E);
 
     // return 100;
 }
@@ -288,7 +239,7 @@ void kqxdl()
 void AC_OFF()
 {
     I2C_Write(SW6208_address, 0x18, 0X10) == 0;
-    Serial.println("------6208--------AC_OFF--------");
+    Serial.println("--------------AC_OFF-----------");
 }
 /**
  *
@@ -318,9 +269,9 @@ void AC_OFF()
  */
 void SW6208init()
 {
-    if (I2C_Read(SW6208_address, 0x03) != 0xBF || I2C_Read(SW6208_address, 0x30) != 0x54 || I2C_Read(SW6208_address, 0x33) != 0x3)
+    if (I2C_Read(SW6208_address, 0x03) != 0x7F || I2C_Read(SW6208_address, 0x30) != 0x54 || I2C_Read(SW6208_address, 0x33) != 0x3)
     {
-        I2C_Write(SW6208_address, 0x03, 0xBF); // 0000 1111  // 3: 仅显示电量
+        I2C_Write(SW6208_address, 0x03, 0x7F); // 0000 1111  // 1: 双击开启小电流(无单击动画使用)(0x7F), 有动画用(0xBF)(去按键作用)        3: 仅显示电量
         I2C_Write(SW6208_address, 0x30, 0x54); // 0100  // 轻载检测电流设置 VOUT<7.65V 或者 VOUT>7.65V 且 reg0x30[0]=0:   此设置为:25mA    轻载时间设置为8s
         I2C_Write(SW6208_address, 0x33, 0x3);  // 0011  // MCU 蓝牙小电流使能
     }

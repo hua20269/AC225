@@ -10,7 +10,7 @@
 // #define LCD_SCK 18
 // #define LCD_CS 5
 
-// Test new
+// new   AC225
 #define LCD_BL 21
 #define LCD_RES 22
 #define LCD_DC 19

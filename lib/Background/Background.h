@@ -6,7 +6,7 @@ void lcdRotation(); // 连接蓝牙实时刷新屏幕方向
 
 void RefreshDisplay();           // 刷新画面
 void sys_init(uint16_t timenum); // 系统初始化页面   没用   用LOGO页面取代
-void PowerLOGO();                // 开机LOGO
+void PowerLOGO(String imgName);                // 开机LOGO
 //---------------主题-----------
 void lcdlayout01(uint16_t xunhuan, uint8_t bat_per, float battery_V, float ic_temp, float sys_outinv, float battery_A, float bat_ntc,
                  uint8_t sys, uint8_t smalla, uint8_t A_C, uint8_t bt_icon, uint8_t sinkProtocol, uint8_t sourceProtocol);

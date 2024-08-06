@@ -9,6 +9,8 @@
 #include <OneButton.h>
 #include "ota.h"
 #include <WiFi.h>
+#include "AgentConfig.h"
+
 // #include "soc/rtc_wdt.h" // 设置rtc看门狗用
 
 #define BUTTON_PIN_BITMASK 0x0010 // GPIOs 4    io4 按钮
@@ -32,11 +34,11 @@ void setup()
     pinMode(27, INPUT_PULLUP);
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_27, 0);                              // 唤醒引脚配置 低电平唤醒
     esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK, ESP_EXT1_WAKEUP_ALL_LOW); // 唤醒引脚配置 低电平唤醒
-    IICinit();                                                                 // 初始化 IIC 通讯
-    EEPROMinit();                                                              // 初始化 EEPROM 寄存器
-    DisplayInit();                                                             // 显示初始化
-    // PowerLOGO(); // 开机LOGO
-    // delay(1000);
+
+    IICinit();          // 初始化 IIC 通讯
+    EEPROMinit();       // 初始化 EEPROM 寄存器
+    DisplayInit();      // 显示初始化
+    PowerLOGO(imgName); // 开机LOGO     imgName在代理配置中
 
     // 配置倒计时  蓝牙/屏幕
     if (EEPROM.read(5) < 30 && EEPROM.read(5) != 0 || EEPROM.read(5) > 120) // 亮屏时间30-120s
@@ -64,6 +66,7 @@ void setup()
     if (EEPROM.read(11) == 1) // 小程序给更新确认
     {
         EEPROM.write(11, 0);                // 写非1  更新结束
+        EEPROM.write(5, 30);                // 点亮时间改为30s
         EEPROM.commit();                    // 保存
         xTaskCreatePinnedToCore(Task_OTA,   // 具体实现的函数
                                 "Task_OTA", // 任务名称
@@ -131,184 +134,37 @@ void loop()
         sinkProtocol = Sink_Protocol();     // 充电协议
         sourceProtocol = Source_Protocol(); // 放电协议
 
-        Serial.println(ESP.getEfuseMac() & 0X0000FFFFFFFFFFFF, HEX); // chipID  //MAC
+        // Serial.println(ESP.getEfuseMac() & 0X0000FFFFFFFFFFFF, HEX); // chipID  //MAC
+        Serial.print("EfuseMac: ");             // chipID  //MAC
+        Serial.println(ESP.getEfuseMac(), HEX); // chipID  //MAC
 
     beijing0:
         switch (EEPROM.read(4)) // 读取主题号
-        // switch (5)
         {
         case 1:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(50);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing1;
-                        break;
-                    }
-                }
-            }
-            else
-            beijing1:
-                lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
+            lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
             break;
         case 2:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(50);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing2;
-                        break;
-                    }
-                }
-            }
-            else
-            beijing2:
-                BackgroundTime2(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
+            BackgroundTime2(battery_V, sys_outinv, sys, sys_a, sys_w, bat_per, bt_icon, ic_temp, bat_ntc, smalla, A_C);
             break;
         case 3:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(50);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing3;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-            beijing3:
-                BackgroundTime3(week, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_m, cycle, bat_per, bt_icon);
-                BackgroundTime3_2(month, day, bat_ntc, ic_temp, hour, minute, sec, smalla, cycle);
-            }
+            BackgroundTime3(week, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_m, cycle, bat_per, bt_icon);
+            BackgroundTime3_2(month, day, bat_ntc, ic_temp, hour, minute, sec, smalla, cycle);
             break;
         case 4:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(50);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing4;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-            beijing4:
-                BackgroundTime4(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
-            }
+            BackgroundTime4(A_C, bt_icon, sys_outinv, sys_a, sys_w, ic_temp, bat_ntc, bat_per, cycle, sys, sinkProtocol, sourceProtocol);
             break;
         case 5:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(50);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing5;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-            beijing5:
-                BackgroundTime5(smalla, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_per, bat_m, bt_icon, ic_temp, bat_ntc, sinkProtocol, sourceProtocol, month, day, hour, minute, sec, week);
-            }
+            BackgroundTime5(smalla, battery_V, sys_outinv, sys, A_C, sys_a, sys_w, bat_per, bat_m, bt_icon, ic_temp, bat_ntc, sinkProtocol, sourceProtocol, month, day, hour, minute, sec, week);
             break;
         case 6:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(50);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing6;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-            beijing6:
-                BackgroundTime6(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
-            }
+            BackgroundTime6(sys, cycle, smalla, sys_outinv, sys_a, sys_w, bat_per, bt_icon, bat_ntc, sinkProtocol, sourceProtocol);
             break;
         case 7:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(50);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing7;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-            beijing7:
-                BackgroundTime7(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
-            }
+            BackgroundTime7(sys, A_C, sys_outinv, sys_a, sys_w, battery_V, smalla, cycle, bat_per, bat_m, bat_ntc, bt_icon, sinkProtocol, sourceProtocol);
             break;
         default:
-            if (yan == 1)
-            {
-                for (uint16_t i = 1; i < 20; i++)
-                {
-                    Backgroundyan(i);
-                    delay(100);
-                    if (digitalRead(4) == 0)
-                    {
-                        vTaskDelay(300);
-                        yan ^= 1;
-                        goto beijing10;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-            beijing10:
-                lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
-            }
+            lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
             break;
         }
         if (currentTime != 0)
@@ -426,21 +282,22 @@ void loop()
                                     lcdlayout01(cycle, bat_per, battery_V, ic_temp, sys_outinv, sys_a, bat_ntc, sys, smalla, A_C, bt_icon, sinkProtocol, sourceProtocol);
                                     break;
                                 }
-                                jsonBuffer1["chipid"] = ESP.getEfuseMac() & 0X0000FFFFFFFFFFFF;
+                                jsonBuffer1["agent"] = String(agent); // 代理人
+                                jsonBuffer1["efuseMac"] = String(ESP.getEfuseMac(), HEX);
                                 jsonBuffer1["name"] = "AC225";                     // 设备名称
-                                jsonBuffer1["software"] = "v4.1";                  // 固件版本
-                                jsonBuffer1["hardware"] = "v3.0";                  // 硬件版本
+                                jsonBuffer1["software"] = String(software);        // 固件版本
+                                jsonBuffer1["hardware"] = String(hardware);        // 硬件版本
                                 jsonBuffer1["bat_cir"] = cycle;                    // 循环次数
-                                jsonBuffer1["bat_V"] = String(battery_V, 3);       // 电池电压
-                                jsonBuffer1["bat_A"] = String(sys_a, 3);           // 电流
+                                jsonBuffer1["bat_V"] = String(battery_V, 2);       // 电池电压
+                                jsonBuffer1["bat_A"] = String(sys_a, 2);           // 电流
                                 jsonBuffer1["A_C"] = A_C;                          // AC口状态
-                                jsonBuffer1["ic_temp"] = String(ic_temp, 3);       // ic温度
-                                jsonBuffer1["sys_outinv"] = String(sys_outinv, 3); // 系统充放电压
-                                jsonBuffer1["sys_w"] = String(sys_w, 3);           // 系统功率
-                                jsonBuffer1["sys"] = sys;                          // 充放电状态
-                                jsonBuffer1["bat_m"] = String(bat_m, 3);           // 电池容量
+                                jsonBuffer1["ic_temp"] = String(ic_temp, 2);       // ic温度
+                                jsonBuffer1["sys_outinv"] = String(sys_outinv, 2); // 充放电压
+                                jsonBuffer1["sys_w"] = String(sys_w, 2);           // 系统功率
+                                // jsonBuffer1["sys"] = sys;                          // 充放电状态
+                                jsonBuffer1["bat_m"] = String(bat_m, 2);           // 电池容量
                                 jsonBuffer1["bat_per"] = bat_per;                  // 百分比bat_per
-                                jsonBuffer1["bat_ntc"] = String(bat_ntc, 3);       // 电池温度
+                                jsonBuffer1["bat_ntc"] = String(bat_ntc, 2);       // 电池温度
                                 String output1;
                                 serializeJson(jsonBuffer1, output1);
                                 jsonBuffer1.clear();
@@ -495,11 +352,12 @@ void loop()
                                     cycle = jsonBuffer2["btcycle"];   // 改写循环次数
 
                                     // 开始写入数据
-                                    EEPROM.write(12, idlock);                                   // 写1 关闭所有输出口(丢失模式)
-                                    initRTCtime(year, month, day, hour, minute, sec + 1, week); // 更新彩屏时间
-                                    EEPROM.write(5, sleeptime);                                 // 写入屏幕睡眠倒计时
-                                    EEPROM.write(8, smalla);                                    // 写入小电流设置
-                                    EEPROM.write(11, ota);                                      // OTA更新  写1更新  更新处自动置零
+                                    EEPROM.write(12, idlock); // 写1 关闭所有输出口(丢失模式)
+                                    if (sec != 0 || minute != 0 || hour != 0 || day != 0 || month != 0 || year || week != 0)
+                                        initRTCtime(year, month, day, hour, minute, sec + 1, week); // 更新彩屏时间
+                                    EEPROM.write(5, sleeptime);                                     // 写入屏幕睡眠倒计时
+                                    EEPROM.write(8, smalla);                                        // 写入小电流设置
+                                    EEPROM.write(11, ota);                                          // OTA更新  写1更新  更新处自动置零
                                     if (espthem != 0)
                                         EEPROM.write(4, espthem); // 写入主题编号
                                     if (topic != 0)

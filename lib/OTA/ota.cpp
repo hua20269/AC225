@@ -3,11 +3,12 @@
 // #include <esp_AutoWifi.h>
 #include <HTTPUpdate.h>
 #include <ota.h>
+#include "AgentConfig.h"
 // int cur, total;
 int a, b;
 
 // 固件链接，在巴法云控制台复制、粘贴到这里即可
-String upUrl = "http://bin.bemfa.com/b/3BcYWMzNDRjODg3OGFiNWQwMWNlNDFkMjNiMmRjZjRmNzQ=AC225.bin";
+// String upUrl = "http://bin.bemfa.com/b/3BcYWMzNDRjODg3OGFiNWQwMWNlNDFkMjNiMmRjZjRmNzQ=AC255LinJieJie.bin";
 
 // 当升级开始时，打印日志
 void update_started()

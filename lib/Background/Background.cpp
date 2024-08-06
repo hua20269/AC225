@@ -94,20 +94,51 @@ void sys_init(uint16_t timenum)
     sprite1.unloadFont();     // 释放加载字体
 }
 
-void PowerLOGO() // 开机LOGO
+void PowerLOGO(String imgName) // 开机LOGO
 {
-    // 开始画布
-    sprite1.createSprite(240, 135);  // 创建画布大小
-    sprite1.fillScreen(TFT_BLACK);   // 设置背景颜色
-    sprite1.loadFont(KaiTi22);       // 字体设置
-    sprite1.setTextColor(TFT_WHITE); // 字体颜色
-    // sprite1.setTextDatum(TL_DATUM);  // 字体左上角
-    sprite1.setTextDatum(CC_DATUM); // 字体居中（坐标）
+    sprite1.createSprite(240, 135); // 创建画布大小
+    if (imgName != "")
+    {
+        if (imgName == "imgZhongGuoLianTong")
+        {
+            sprite1.drawPng(imgZhongGuoLianTong, sizeof(imgZhongGuoLianTong), 0, 0); // 中国联通
+            sprite1.pushSprite(0, 0);                                                // 显示在画布1上
+            vTaskDelay(3000);                                                        // LOGO显示时间
+        }
+        if (imgName == "imgLinJieJie")
+        {
+            sprite1.drawPng(imgLinJieJie, sizeof(imgLinJieJie), 0, 0); 
+            sprite1.pushSprite(0, 0);                                  
+            vTaskDelay(3000);                                          
+        }
+        if (imgName == "imgZiQiDongLai")
+        {
+            sprite1.drawPng(imgZiQiDongLai, sizeof(imgZiQiDongLai), 0, 0); 
+            sprite1.pushSprite(0, 0);                                      
+            vTaskDelay(3000);                                              
+        }
+        if (imgName == "imgZhiChuBao")
+        {
+            sprite1.drawPng(imgZhiChuBao, sizeof(imgZhiChuBao), 0, 0); 
+            sprite1.pushSprite(0, 0);                                  
+            vTaskDelay(1000);                                          
+        }
+        if (imgName == "imgShunFeng")
+        {
+            sprite1.drawPng(imgShunFeng, sizeof(imgShunFeng), 0, 0); 
+            sprite1.pushSprite(0, 0);                                
+            vTaskDelay(5000);                                        
+        }
+        if (imgName == "imgYiWangQinSheng")
+        {
+            sprite1.drawPng(imgYiWangQinSheng, sizeof(imgYiWangQinSheng), 0, 0); 
+            sprite1.pushSprite(0, 0);                                            
+            vTaskDelay(3000);                                                    
+        }
+    }
 
-    sprite1.drawString("LOGO", 120, 67);
-    sprite1.pushSprite(0, 0); // 显示在画布1上
-    sprite1.deleteSprite();   // 删除精灵
-    sprite1.unloadFont();     // 释放加载字体
+    sprite1.deleteSprite(); // 删除精灵
+    sprite1.unloadFont();   // 释放加载字体
 }
 
 /**
@@ -1761,7 +1792,6 @@ void BackgroundTime7(uint8_t sys, uint8_t A_C, float sys_outinv, float sys_a, fl
 //-------------------------------------------------------------------------------------以上为主题布局-----------------------
 //-------------------------------------------------------------------------------------以上为主题布局-----------------------
 //-------------------------------------------------------------------------------------以上为主题布局-----------------------
-
 
 /**
  * 动画
