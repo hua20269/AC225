@@ -7,7 +7,7 @@
  * @brief
  */
 // 默认 公司
-#define agent "ZhiChuBao"     // 代理名   蓝牙给小程序传值
+#define agent "IStore"      // 代理名   蓝牙给小程序传值    Intelligent store
 #define imgName ""      // 开机LOGO
 #define software "v4.0" // 固件版本
 #define hardware "v3.0" // 硬件版本

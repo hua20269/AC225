@@ -4,7 +4,7 @@ DS1302 rtc(12, 15, 13); // 对应rst dat clk
 /**
  * 初始化ds1302 并设置年月日时分秒星期
  */
-void initRTCtime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t sec, uint8_t week)
+void SetRTCtime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t sec, uint8_t week)
 {
     rtc.writeProtect(false);
     rtc.halt(false);
@@ -16,7 +16,7 @@ void initRTCtime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_
  * 输出1302的时间数据
  */
 
-void printTime(uint16_t *year, uint8_t *month, uint8_t *day, uint8_t *hour, uint8_t *minute, uint8_t *sec, uint8_t *week)
+void PrintTime(uint16_t *year, uint8_t *month, uint8_t *day, uint8_t *hour, uint8_t *minute, uint8_t *sec, uint8_t *week)
 {
     Time tim = rtc.time(); // 从1302获取时间数据
     *year = tim.yr;

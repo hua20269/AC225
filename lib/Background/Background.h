@@ -2,33 +2,40 @@
 #define _Background_H
 
 void DisplayInit(); // 屏幕初始化函数
-void lcdRotation(); // 连接蓝牙实时刷新屏幕方向
+void LcdRotation(); // 连接蓝牙实时刷新屏幕方向
 
 void RefreshDisplay();           // 刷新画面
 void sys_init(uint16_t timenum); // 系统初始化页面   没用   用LOGO页面取代
-void PowerLOGO(String imgName);                // 开机LOGO
+void PowerLOGO(String imgName);  // 开机LOGO
 //---------------主题-----------
-void lcdlayout01(uint16_t xunhuan, uint8_t bat_per, float battery_V, float ic_temp, float sys_outinv, float battery_A, float bat_ntc,
-                 uint8_t sys, uint8_t smalla, uint8_t A_C, uint8_t bt_icon, uint8_t sinkProtocol, uint8_t sourceProtocol);
-void BackgroundTime2(float battery_V, float sys_outinv, uint8_t sys, float battery_A, float sys_w, uint8_t bat_per,
-                     uint8_t bt_icon, float ic_temp, float bat_ntc, uint8_t smalla, uint8_t A_C);
-void BackgroundTime3(uint8_t week, float batv, float sysv, uint16_t workp, uint16_t ACstate,
-                     float bata, float sysw, float batvolume, int xnum, uint16_t batper, uint8_t bt_icon);
-void BackgroundTime3_2(uint8_t month, uint8_t day, float battemp, float temp, uint8_t hour, uint8_t minute, uint8_t sec,
-                       uint8_t xdl, uint16_t cycle);
-void BackgroundTime4(uint8_t A_C, uint8_t bt_icon, float sys_outinv, float battery_A, float sys_w, float ic_temp, float bat_ntc,
-                     uint8_t bat_per, uint16_t xunhuan, uint8_t sys, uint8_t sinkProtocol, uint8_t sourceProtocol);
-void BackgroundTime5(uint8_t smalla, float battery_V, float sys_outinv, uint8_t sys, uint8_t A_C, float battery_A, float sys_w, uint8_t bat_per, float bat_m, uint8_t bt_icon,
-                     float ic_temp, float bat_ntc, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t sec, uint8_t week);
-void BackgroundTime6(uint8_t sys, uint8_t cycle, uint8_t smalla, float sys_outinv, float sys_a, float sys_w, uint8_t bat_per, uint8_t bt_icon,
-                     float bat_ntc, uint8_t sinkProtocol, uint8_t sourceProtocol);
-void BackgroundTime7(uint8_t sys, uint8_t A_C, float sys_outinv, float sys_a, float sys_w, float bat_v, uint8_t smalla, uint8_t cycle, uint8_t bat_per, float bat_m,
-                     float bat_ntc, uint8_t bt_icon, uint8_t sinkProtocol, uint8_t sourceProtocol);
+// 经典主题  HUA
+void Theme1(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle);
+// 闪极风格 HUA
+void Theme2(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle);
+// win10风格  小东
+void Theme3(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle,
+            uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t sec, uint8_t week);
+// 极简主题  貹
+void Theme4(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle);
+// 手机风格  HUA
+void Theme5(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle,
+            uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t sec, uint8_t week);
+// 新简风  HUA
+void Theme6(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle);
+// 全功能主题  HUA
+void Theme7(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle);
 //------------------
 
 void Backgroundyan(uint16_t pngindex); // 动画
-void offscreen(); // 息屏
-void onscreen();  // 亮屏
+void offscreen();                      // 息屏
+void onscreen();                       // 亮屏
 
 void lost_Page(); // 丢失模式  关闭所有输出口
 

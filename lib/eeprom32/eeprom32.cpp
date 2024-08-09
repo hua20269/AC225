@@ -9,25 +9,11 @@ void EE_CycleCount(uint8_t bat_per)
 {
     uint16_t xh;
     if (bat_per >= 80)
-    {
         if (EEPROM.read(0) != 1)
-        {
             EEPROM.write(0, 1);
-            delay(3);
-            EEPROM.commit();
-            delay(3);
-        }
-    }
     if (bat_per <= 20)
-    {
         if (EEPROM.read(1) != 1)
-        {
             EEPROM.write(1, 1);
-            delay(3);
-            EEPROM.commit();
-            delay(3);
-        }
-    }
 
     if (EEPROM.read(0) && EEPROM.read(1))
     {
@@ -37,10 +23,12 @@ void EE_CycleCount(uint8_t bat_per)
         EEPROM.write(1, 0);
         delay(2);
         EEPROM.write(2, xh);
-        delay(2);
-        EEPROM.commit();
-        delay(2);
     }
+    // if (EEPROM.read(2) == 255)
+    //     EEPROM.write(2, 0);
+
+    EEPROM.commit();
+    delay(3);
 }
 
 // 地址5：记录屏幕自动息屏时间
@@ -49,7 +37,7 @@ void EE_CycleCount(uint8_t bat_per)
  *
  * @param data 自动息屏时间  最大 255s
  */
-void EE_LcdSleep(uint8_t data)
+void EE_LcdTime(uint8_t data)
 
 {
     EEPROM.write(5, data);
@@ -105,7 +93,7 @@ void EE_ScreenDirection(uint8_t data)
  *
  * @param data 主题编号
  */
-void EE_Them(uint8_t data)
+void EE_Theme(uint8_t data)
 
 {
     EEPROM.write(4, data);

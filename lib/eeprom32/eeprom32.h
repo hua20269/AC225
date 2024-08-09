@@ -50,11 +50,11 @@ eeprom可用地址为0~4096
 void EEPROMinit(); // 初始化存储
 
 void EE_CycleCount(uint8_t bat_per);  // eeprom: 2 判断循环次数    容量是否高于80    容量是否低于20
-void EE_LcdSleep(uint8_t data);        // eeprom: 5 写入屏幕自动息屏时间
+void EE_LcdTime(uint8_t data);        // eeprom: 5 写入屏幕自动息屏时间
 void EE_BLETimeWrite(uint16_t data);   // eeprom: 6,7  6高八位  7低八位   写入蓝牙打开的时间
 uint16_t EE_BLETimeRead();             // 读取蓝牙打开的时间
 void EE_ScreenDirection(uint8_t data); // eeprom: 3 写入屏幕方向
-void EE_Them(uint8_t data);            // eeprom: 4 写入主题号   eeprom: 4
+void EE_Theme(uint8_t data);            // eeprom: 4 写入主题号   eeprom: 4
 void EE_SmallA(uint8_t data);          // eeprom: 8 写小电流设置开关
 void EE_PassWrite(uint16_t data);      // eeprom: 9,10 高八位 10低八位  写入四位的十进制数密码
 uint16_t EE_PassRead();                // 读取密码的值

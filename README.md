@@ -8,9 +8,9 @@ Flash: 4Mb
 
 7款主题，增加OTA功能
 
-SSID:2024   password:12345678
+SSID:2024   PASS:12345678
 
-LastUpdate  24/8/1
+LastUpdate  24/8/6
 
 
 
