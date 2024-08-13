@@ -10,7 +10,9 @@ Flash: 4Mb
 
 SSID:2024   PASS:12345678
 
-LastUpdate  24/8/6
+LastUpdate  24/8/13
+
+main中数据已提取
 
 
 
