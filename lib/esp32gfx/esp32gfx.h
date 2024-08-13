@@ -1,22 +1,22 @@
 #ifndef _ESP32GFX_H
 #define _ESP32GFX_H
 #define LGFX_USE_V1
-#include <LovyanGFX.hpp>
+#include <LovyanGFX.h>
 
-#define LCD_BL 22
-#define LCD_RES 21
-#define LCD_DC 23
-#define LCD_SDA 19
-#define LCD_SCK 18
-#define LCD_CS 5
-
-// new   AC225
-// #define LCD_BL 21
-// #define LCD_RES 22
-// #define LCD_DC 19
-// #define LCD_SDA 23
+// #define LCD_BL 22
+// #define LCD_RES 21
+// #define LCD_DC 23
+// #define LCD_SDA 19
 // #define LCD_SCK 18
 // #define LCD_CS 5
+
+// new   AC225
+#define LCD_BL 21
+#define LCD_RES 22
+#define LCD_DC 19
+#define LCD_SDA 23
+#define LCD_SCK 18
+#define LCD_CS 5
 
 class LGFX : public lgfx::LGFX_Device
 {

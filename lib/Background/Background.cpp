@@ -156,11 +156,11 @@ void PowerLOGO(String imgName) // 开机LOGO
  * @param sinkProtocol 快充协议
  * @param sourceProtocol 快放协议
  * @param smalla 小电流状态
- * @param bt_icon 蓝牙状态
+ * @param ble_state 蓝牙状态
  * @param cycle 循环次数
  */
 void Theme1(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
-            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle)
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t ble_state, uint8_t cycle)
 {
     char num_n[10];
     float a = 0, b = 0;
@@ -336,7 +336,7 @@ void Theme1(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
     sprintf(num_n, "%d", cycle);
     sprite1.drawString(num_n, 117, 115); // 循环次数
 
-    if (bt_icon) // 蓝牙
+    if (ble_state) // 蓝牙
     {
         sprite1.drawPng(imgbleimg24, sizeof(imgbleimg24), 156, 111); // 蓝牙图标
     }
@@ -438,11 +438,11 @@ void Theme1(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  * @param sinkProtocol 快充协议
  * @param sourceProtocol 快放协议
  * @param smalla 小电流状态
- * @param bt_icon 蓝牙状态
+ * @param ble_state 蓝牙状态
  * @param cycle 循环次数
  */
 void Theme2(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
-            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle)
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t ble_state, uint8_t cycle)
 {
     char draw_num[20];
     float v = 0, a = 0; // 电压  // 电流
@@ -494,7 +494,7 @@ void Theme2(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
     sprite1.drawString(draw_num, 27, 31);
     sprintf(draw_num, "%.2f℃", ntc_temp); // 电池温度NTC
     sprite1.drawString(draw_num, 117, 4);
-    if (bt_icon) // 蓝牙
+    if (ble_state) // 蓝牙
     {
         sprite1.drawString("ON", 117, 31);
     }
@@ -690,7 +690,7 @@ void Theme2(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  * @param sinkProtocol 快充协议
  * @param sourceProtocol 快放协议
  * @param smalla 小电流状态
- * @param bt_icon 蓝牙状态
+ * @param ble_state 蓝牙状态
  * @param cycle 循环次数
  *
  * @param year   年
@@ -703,7 +703,7 @@ void Theme2(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  *
  */
 void Theme3(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
-            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t ble_state, uint8_t cycle,
             uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t sec, uint8_t week)
 {
     char draw_num[20];
@@ -794,7 +794,7 @@ void Theme3(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         sprite1.drawString("NO", 175, 83); // 态
 
     // 蓝牙状态
-    if (bt_icon)
+    if (ble_state)
         sprite1.fillRoundRect(47, 0, 30, 30, 5, TFT_RED);
     else
         sprite1.fillRoundRect(47, 0, 30, 30, 5, pink1);
@@ -863,11 +863,11 @@ void Theme3(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  * @param sinkProtocol 快充协议
  * @param sourceProtocol 快放协议
  * @param smalla 小电流状态
- * @param bt_icon 蓝牙状态
+ * @param ble_state 蓝牙状态
  * @param cycle 循环次数
  */
 void Theme4(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
-            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle)
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t ble_state, uint8_t cycle)
 {
     char draw_num[20];
     if (bat_per > 100)
@@ -928,7 +928,7 @@ void Theme4(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
     {
         sprite1.drawPng(dianchiicon4, sizeof(dianchiicon4), 139, 1);
     }
-    if (bt_icon)
+    if (ble_state)
     {
         sprite1.drawPng(lanya, sizeof(lanya), 210, 108);
     }
@@ -1061,7 +1061,7 @@ void Theme4(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  * @param sinkProtocol 快充协议
  * @param sourceProtocol 快放协议
  * @param smalla 小电流状态
- * @param bt_icon 蓝牙状态
+ * @param ble_state 蓝牙状态
  * @param cycle 循环次数
  *
  * @param year   年
@@ -1074,7 +1074,7 @@ void Theme4(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  *
  */
 void Theme5(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
-            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle,
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t ble_state, uint8_t cycle,
             uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t sec, uint8_t week)
 {
     char draw_num[20];
@@ -1129,7 +1129,7 @@ void Theme5(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
     sprintf(draw_num, "%d月%d日 周%s", month, day, weeks); // 日期 星期
     sprite1.drawString(draw_num, 0, 24);
 
-    if (bt_icon) // 蓝牙
+    if (ble_state) // 蓝牙
     {
         // sprite1.pushImage(110, 0, 20, 20, imgbleimg20); // 蓝牙图标
         sprite1.drawPng(imgbleimg20, sizeof(imgbleimg20), 110, 1); // 蓝牙图标
@@ -1442,11 +1442,11 @@ void Theme5(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  * @param sinkProtocol 快充协议
  * @param sourceProtocol 快放协议
  * @param smalla 小电流状态
- * @param bt_icon 蓝牙状态
+ * @param ble_state 蓝牙状态
  * @param cycle 循环次数
  */
 void Theme6(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
-            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle)
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t ble_state, uint8_t cycle)
 {
     char draw_num[20];
     // float v = 0, a = 0; // 电压  // 电流
@@ -1597,7 +1597,7 @@ void Theme6(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
     sprite1.drawString(draw_num, 140 + 27, 27 * 3); // 功
     sprintf(draw_num, "%d", cycle);
     sprite1.drawString(draw_num, 140 + 27, 27 * 4); // 循环
-    if (bt_icon == 1)
+    if (ble_state == 1)
     {
         sprite1.drawPng(imgbleimg24, sizeof(imgbleimg24), 215, 27 * 4); // 蓝牙图标
     }
@@ -1622,11 +1622,11 @@ void Theme6(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
  * @param sinkProtocol 快充协议
  * @param sourceProtocol 快放协议
  * @param smalla 小电流状态
- * @param bt_icon 蓝牙状态
+ * @param ble_state 蓝牙状态
  * @param cycle 循环次数
  */
 void Theme7(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp, float bat_m,
-            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t bt_icon, uint8_t cycle)
+            uint8_t bat_per, uint8_t sys_state, uint8_t ac_state, uint8_t sinkProtocol, uint8_t sourceProtocol, uint8_t smalla, uint8_t ble_state, uint8_t cycle)
 {
     char draw_num[20];
     // float v = 0, a = 0; // 电压  // 电流
@@ -1815,7 +1815,7 @@ void Theme7(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         sprite1.drawString("NO", 205, 27 * 3); // 小电流
 
     sprite1.setTextColor(TFT_WHITE);
-    if (bt_icon == 1)
+    if (ble_state == 1)
     {
         sprite1.drawString("BLE", 205, 27 * 4); // 蓝牙
     }
