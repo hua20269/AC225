@@ -39,30 +39,28 @@ uint8_t I2C_Read(uint8_t mcuAddr, uint8_t regAddr)
     uint8_t t = 200;
     uint8_t ret = 0;
     uint8_t getdate;
-    /*  Write Device Address */
-    Wire.beginTransmission(mcuAddr);
-    /*  Write Subaddresses */
-    Wire.write(regAddr);
+    Wire.beginTransmission(mcuAddr); // 设备地址 写入
+    Wire.write(regAddr);             // 寄存器地址 写入
     ret = Wire.endTransmission(false);
-    if (ret == 0)
+    if (ret == 0) // 判断是否成功传输
     {
-        // Serial.println("I2C_Read--Ok!");
+        Wire.requestFrom(mcuAddr, (size_t)1, (bool)1); // 请求数据
+        /* 5. 读出AT24C02返回的值，成功读取后写入缓存变量处，读取失败返回失败码 */
+        while (!Wire.available()) // 读取数据非一个字节遍历
+        {
+            t--;
+            delay(1);
+            if (t == 0)
+                return 1;
+        }
+        getdate = Wire.read(); // 读取数据
+        return getdate;
     }
     else
     {
-        Serial.println("I2C_Read--NO!");
+        // 根据不同的错误代码进行处理
+        Serial.print("Error: Transmission failed with code ");
+        Serial.println(ret);
+        return 0;
     }
-    Wire.requestFrom(mcuAddr, (size_t)1, (bool)1);
-    /* 5. 读出AT24C02返回的值，成功读取后写入缓存变量处，读取失败返回失败码 */
-    while (!Wire.available())
-    {
-        t--;
-        delay(1);
-        if (t == 0)
-        {
-            return 1;
-        }
-    }
-    getdate = Wire.read(); // receive a byte as character
-    return getdate;
 }
