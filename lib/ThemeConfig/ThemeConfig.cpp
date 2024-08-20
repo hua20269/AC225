@@ -21,11 +21,8 @@ uint16_t year;                               // 年份
 uint8_t month, day, hour, minute, sec, week; //  月  日  时  分  秒  星期
 
 // main 当前文件用
-uint16_t cycle = 0;  // uint8_t 循环次数     暂用uint16_t预留
+uint16_t cycle = 0;    // uint8_t 循环次数     暂用uint16_t预留
 uint8_t ble_state = 0; // 蓝牙开关状态
-
-
-
 
 void ThemeSelect()
 {
@@ -193,23 +190,23 @@ void ThemeSelect_BLE()
     // 整理第 1 次发送数据
     jsonBuffer1["agent"] = agent; // 代理人
     // jsonBuffer1["efuseMac"] = String(ESP.getEfuseMac(), HEX);
-    jsonBuffer1["name"] = "AC225";                   // 设备名称
-    jsonBuffer1["software"] = software;              // 固件版本
-    jsonBuffer1["hardware"] = hardware;              // 硬件版本
-    jsonBuffer1["ic_temp"] = String(ic_temp, 2);     // ic温度
-    jsonBuffer1["bat_ntc"] = String(ntc_temp, 2);    // 电池温度
-    jsonBuffer1["bat_V"] = String(bat_v, 2);         // 电池电压
-    jsonBuffer1["sys_outinv"] = String(sys_v, 2);    // 充放电压
-    jsonBuffer1["bat_A"] = String(sys_a, 2);         // 电流
-    jsonBuffer1["sys_w"] = String(sys_v * sys_a, 2); // 功率          后续小程序计算，或分段传输保留
-    jsonBuffer1["A_C"] = ac_state;                   // AC口状态
-    // jsonBuffer1["sys"] = sys_state;                  // 充放电状态       小程序无作用，后续小程序更新使用
+    jsonBuffer1["name"] = "AC225";                // 设备名称
+    jsonBuffer1["software"] = software;           // 固件版本
+    jsonBuffer1["hardware"] = hardware;           // 硬件版本
+    jsonBuffer1["ic_temp"] = String(ic_temp, 2);  // ic温度
+    jsonBuffer1["bat_ntc"] = String(ntc_temp, 2); // 电池温度
+    jsonBuffer1["bat_V"] = String(bat_v, 2);      // 电池电压
+    jsonBuffer1["sys_outinv"] = String(sys_v, 2); // 系统电压
+    jsonBuffer1["bat_A"] = String(sys_a, 2);      // 充放电流
+    // jsonBuffer1["sys_w"] = String(sys_v * sys_a, 2); // 功率         小程序计算，或分段传输保留
+    jsonBuffer1["A_C"] = ac_state;           // AC口状态
+    jsonBuffer1["sys"] = sys_state;          // 充放电状态
     jsonBuffer1["bat_m"] = String(bat_m, 2); // 电池实时容量
     jsonBuffer1["bat_per"] = bat_per;        // 百分比bat_per
     jsonBuffer1["bat_cir"] = cycle;          // 循环次数
+    jsonBuffer1["smalla"] = smalla;          // 小电流状态
     // jsonBuffer1["sinkProtocol"] = sinkProtocol;      // 充电协议       后续小程序更新分段传值
     // jsonBuffer1["sourceProtocol"] = sourceProtocol;  // 放电协议       后续小程序更新分段传值
-    // jsonBuffer1["smalla"] = smalla;                  // 小电流状态      后续小程序更新分段传值
 
     String output1;
     serializeJson(jsonBuffer1, output1);
@@ -280,6 +277,7 @@ void ThemeSelect_BLE()
             EEPROM.write(12, idlock); // 写1 关闭所有输出口(丢失模式)
         if (ota != 0)
             EEPROM.write(11, ota); // OTA更新  写1更新  更新处自动置零
+
         if (sec != 0 || minute != 0 || hour != 0 || day != 0 || month != 0 || year || week != 0)
             SetRTCtime(year, month, day, hour, minute, sec + 1, week); // 更新彩屏时间
         EEPROM.write(8, smalla);                                       // 写入小电流设置    (0 / 1)
