@@ -243,7 +243,7 @@ void Theme1(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sinkProtocol) // 快充协议
         {
         case 0:
-            sprite1.drawString("NOT", 27, 115);
+            sprite1.drawString("None", 27, 115);
             break;
         case 1:
             sprite1.drawString("PD2.0", 27, 115);
@@ -276,7 +276,7 @@ void Theme1(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sourceProtocol) // 快放协议
         {
         case 0:
-            sprite1.drawString("NOT", 27, 115);
+            sprite1.drawString("None", 27, 115);
             break;
         case 1:
             sprite1.drawString("PD2.0", 27, 115);
@@ -526,7 +526,7 @@ void Theme2(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sinkProtocol) // 快充协议
         {
         case 0:
-            sprite1.drawString("NOT", 203, 89);
+            sprite1.drawString("None", 203, 89);
             break;
         case 1:
             sprite1.drawString("PD2.0", 203, 89);
@@ -559,7 +559,7 @@ void Theme2(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sourceProtocol) // 快放协议
         {
         case 0:
-            sprite1.drawString("NOT", 203, 89);
+            sprite1.drawString("None", 203, 89);
             break;
         case 1:
             sprite1.drawString("PD2.0", 203, 89);
@@ -1229,7 +1229,7 @@ void Theme5(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sinkProtocol) // 快充协议
         {
         case 0:
-            sprite1.drawString("NOT", 27, 48 - 2);
+            sprite1.drawString("None", 27, 48 - 2);
             break;
         case 1:
             sprite1.drawString("PD2.0", 27, 48 - 2);
@@ -1262,7 +1262,7 @@ void Theme5(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sourceProtocol) // 快放协议
         {
         case 0:
-            sprite1.drawString("NOT", 27, 48 - 2);
+            sprite1.drawString("None", 27, 48 - 2);
             break;
         case 1:
             sprite1.drawString("PD2.0", 27, 48 - 2);
@@ -1467,7 +1467,7 @@ void Theme6(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sinkProtocol) // 快充协议
         {
         case 0:
-            sprite1.drawString("NOT", 0, 0);
+            sprite1.drawString("None", 0, 0);
             break;
         case 1:
             sprite1.drawString("PD2.0", 0, 0);
@@ -1501,7 +1501,7 @@ void Theme6(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sourceProtocol) // 快放协议
         {
         case 0:
-            sprite1.drawString("NOT", 0, 0);
+            sprite1.drawString("None", 0, 0);
             break;
         case 1:
             sprite1.drawString("PD2.0", 0, 0);
@@ -1684,7 +1684,7 @@ void Theme7(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sinkProtocol) // 快充协议
         {
         case 0:
-            sprite1.drawString("NOT", 120, 0);
+            sprite1.drawString("None", 120, 0);
             break;
         case 1:
             sprite1.drawString("PD2.0", 120, 0);
@@ -1717,7 +1717,7 @@ void Theme7(float bat_v, float sys_v, float sys_a, float ic_temp, float ntc_temp
         switch (sourceProtocol) // 快放协议
         {
         case 0:
-            sprite1.drawString("NOT", 120, 0);
+            sprite1.drawString("None", 120, 0);
             break;
         case 1:
             sprite1.drawString("PD2.0", 120, 0);
