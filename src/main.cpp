@@ -38,7 +38,7 @@ void setup()
     IICinit();          // 初始化 IIC 通讯
     EEPROMinit();       // 初始化 EEPROM 寄存器
     DisplayInit();      // 显示初始化
-    PowerLOGO(imgName); // 开机LOGO 
+    PowerLOGO(imgName); // 开机LOGO
 
     // 配置倒计时  蓝牙/屏幕
     if (EEPROM.read(5) < 30 && EEPROM.read(5) != 0 || EEPROM.read(5) > 120) // 亮屏时间30-120s
@@ -81,9 +81,9 @@ void setup()
         esp_restart(); // 重启 （失败情况，防止乱跳）
     }
 
-    // CK22AT  2314
-    if (keros_main() != 1)
-        esp_deep_sleep_start();
+    // CK22AT  2314   小圆板子暂不使用
+    // if (keros_main() != 1)
+    //     esp_deep_sleep_start();
 
     // 看门狗
     xTaskCreatePinnedToCore(Task_RTC,   // 具体实现的函数

@@ -1,4 +1,4 @@
-# AC225
+# AC225   有双击小电流(无动画)    无加密芯片
 
 固件版本：v4.1
 
@@ -10,7 +10,7 @@ Flash: 4Mb
 
 SSID:2024   PASS:12345678
 
-LastUpdate  24/8/13
+LastUpdate  24/8/20
 
 main中数据已提取
 
